@@ -3,279 +3,147 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MakersG — Flash Firmware ESP</title>
-
-  <meta name="theme-color" content="#0f1720" />
-
-  <!-- esp-web-tools -->
-  <script type="module" src="https://unpkg.com/esp-web-tools@latest/dist/web/install-button.js"></script>
-
-  <link rel="icon" href="assets/favicon.ico" />
-
-  <style>
-    :root {
-      --bg: #0b0f12; --surface: #0f1417; --muted: #9aa6b2; --text: #e6eef6;
-      --brand-accent: #58a6ff; --brand-strong: #cfe9ff;
-      --radius: 12px; --glass: rgba(255,255,255,0.03);
-      --shadow: 0 10px 30px rgba(2,6,23,0.4);
-    }
-    :root[data-theme='light'] {
-      --bg: #fafbfc; --surface: #fff; --muted: #556677; --text: #091023;
-      --brand-accent: #0a84ff; --brand-strong: #0f7fff;
-      --shadow: 0 10px 30px rgba(11,18,32,0.12);
-    }
-
-    /* Global */
-    body {
-      margin: 0; background: var(--bg);
-      background-image: linear-gradient(180deg, rgba(88,166,255,0.02), transparent);
-      color: var(--text);
-      font-family: Inter, system-ui, -apple-system, sans-serif;
-    }
-    .wrap { max-width: 960px; margin: 36px auto; padding: 20px; }
-    .flex { display: flex; align-items: center; }
-    .gap { gap: 12px; }
-
-    /* HEADER */
-    header.brand { justify-content: space-between; margin-bottom: 20px; }
-    .brand-logo {
-      width: 56px; height: 56px; padding: 8px;
-      background: var(--glass); border-radius: 10px; display: grid; place-items: center;
-    }
-    .brand-logo img { width: 100%; object-fit: contain; }
-    .btn-plain {
-      background: none; border: 0; color: var(--muted); border-radius: 8px;
-      padding: 8px; cursor: pointer; transition: 0.2s;
-    }
-    .btn-plain:hover { color: var(--brand-accent); transform: translateY(-1px); }
-
-    /* CARD */
-    .card {
-      background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: var(--shadow);
-      padding: 22px; border-radius: 14px;
-    }
-    .grid {
-      display: grid; grid-template-columns: 1fr 340px; gap: 20px;
-    }
-
-    /* LEFT */
-    .install-wrap {
-      padding: 20px; border-radius: 12px;
-      background: var(--surface); border: 1px solid rgba(255,255,255,0.04);
-      display: flex; justify-content: center;
-    }
-    .selector { display: flex; gap: 10px; flex-wrap: wrap; }
-    .version-select {
-      padding: 10px 12px; border-radius: 10px;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.03);
-      color: var(--text); font-weight: 600;
-    }
-    .apply-btn {
-      background: var(--brand-accent); color: #fff; border: 0;
-      padding: 10px 16px; border-radius: 10px; cursor: pointer;
-      font-weight: 700; box-shadow: 0 4px 14px rgba(46,160,255,0.18);
-    }
-
-    /* RIGHT */
-    .meta, .help {
-      background: var(--surface);
-      border-radius: 10px; padding: 12px;
-      border: 1px solid rgba(255,255,255,0.04);
-      font-size: 14px; color: var(--muted);
-    }
-    .help { background: transparent; border: none; }
-
-    footer { margin-top: 20px; color: var(--muted); font-size: 13px; }
-
-    @media (max-width: 880px) {
-      .grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  <title>ESP32 Firmware Installer (WebSerial)</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <div class="wrap">
-    <!-- HEADER -->
-    <header class="brand flex">
-      <div class="flex gap">
-        <div class="brand-logo">
-          <img src="assets/makersg-logo.png" alt="MakersG logo" />
-        </div>
-        <div>
-          <h1 style="margin:0;font-size:18px;color:var(--brand-strong)">MakersG</h1>
-          <p style="margin:0;font-size:13px;color:var(--muted)">ESP Firmware Manager — Nạp nhanh, an toàn</p>
-        </div>
-      </div>
+  <div class="container">
 
-      <div class="flex gap">
-        <a class="btn-plain" target="_blank" href="https://github.com/quanphamwork/makersg.github.io">Repo</a>
-        <button id="themeToggle" class="btn-plain" aria-pressed="false">
-          <span id="themeIcon">🌙</span>
-        </button>
-      </div>
+    <header>
+      <h1>ESP32 Firmware Installer</h1>
+      <p class="muted">Chọn Firmware → Hardware → Screen → Kết nối → Nạp</p>
     </header>
 
-    <!-- MAIN -->
-    <div class="card">
-      <div class="grid">
-        <!-- LEFT -->
-        <div>
-          <div class="selector">
-            <label style="color:var(--muted)">Phiên bản:</label>
-            <select id="versionSelect" class="version-select"></select>
-            <button id="applyBtn" class="apply-btn">Áp dụng</button>
+    <main>
+
+      <!-- THREE CAROUSELS -->
+      <section class="carousels">
+
+        <!-- Firmware carousel -->
+        <div class="block">
+          <h2>1) Firmware</h2>
+          <div class="carousel-container" id="fw-carousel">
+            <button class="nav prev">❮</button>
+            <div class="carousel">
+              <div class="item active" data-bin-url="">
+                <div class="imgwrap"><img src="https://picsum.photos/id/1025/400/240" alt=""></div>
+                <div class="meta"><div class="title">Chatbot AI</div><div class="sub">recommended</div></div>
+              </div>
+
+              <div class="item" data-bin-url="">
+                <div class="imgwrap"><img src="https://picsum.photos/id/1035/400/240" alt=""></div>
+                <div class="meta"><div class="title">Office Box</div><div class="sub">office_v1.bin</div></div>
+              </div>
+
+              <div class="item" data-bin-url="">
+                <div class="imgwrap"><img src="https://picsum.photos/id/1043/400/240" alt=""></div>
+                <div class="meta"><div class="title">Gym Box</div><div class="sub">gym_v1.bin</div></div>
+              </div>
+            </div>
+            <button class="nav next">❯</button>
           </div>
 
-          <div id="installerArea" class="install-wrap"></div>
-
-          <div class="meta" id="firmwareMeta"></div>
+          <div class="choose-row">
+            <label class="file-label">Or choose .bin file:
+              <input id="fw-file" type="file" accept=".bin" />
+            </label>
+            <input id="bin-url" type="text" placeholder="Or paste firmware URL (optional)" />
+            <button id="btn-load-url">Load URL</button>
+          </div>
         </div>
 
-        <!-- RIGHT -->
-        <div class="flex" style="flex-direction:column;gap:12px">
-          <div class="meta">
-            <strong>Hướng dẫn nhanh</strong>
-            <ul style="margin:8px 0 0 18px;">
-              <li>Kết nối ESP qua USB.</li>
-              <li>Chọn phiên bản → <b>Áp dụng</b> → "Install".</li>
-              <li>Firmware cần host HTTPS + CORS.</li>
-            </ul>
-          </div>
+        <!-- Hardware carousel -->
+        <div class="block">
+          <h2>2) Hardware</h2>
+          <div class="carousel-container" id="hw-carousel">
+            <button class="nav prev">❮</button>
+            <div class="carousel">
+              <div class="item active" data-board="ESP32-S3-M16R8">
+                <div class="imgwrap"><img src="https://picsum.photos/id/1060/400/240" alt=""></div>
+                <div class="meta"><div class="title">ESP32-S3 M16R8</div><div class="sub">16MB flash</div></div>
+              </div>
 
-          <div class="help">
-            <strong>Lưu ý kỹ thuật</strong>
-            <p style="margin:8px 0 0">
-              Tính SHA256 bằng: <code>shasum -a 256 firmware.bin</code>
-            </p>
+              <div class="item" data-board="ESP32-S3-Super">
+                <div class="imgwrap"><img src="https://picsum.photos/id/1003/400/240" alt=""></div>
+                <div class="meta"><div class="title">ESP32-S3 Super</div><div class="sub">8MB flash</div></div>
+              </div>
+
+              <div class="item" data-board="ESP32-S3-Zero">
+                <div class="imgwrap"><img src="https://picsum.photos/id/1008/400/240" alt=""></div>
+                <div class="meta"><div class="title">ESP32-S3 Zero</div><div class="sub">Mini board</div></div>
+              </div>
+            </div>
+            <button class="nav next">❯</button>
           </div>
         </div>
-      </div>
 
-      <footer class="flex" style="justify-content:space-between">
-        <span>© MakersG — Dark mode first</span>
-        <a href="#" style="color:var(--muted)">Chính sách</a>
-      </footer>
-    </div>
+        <!-- Screen carousel -->
+        <div class="block">
+          <h2>3) Screen</h2>
+          <div class="carousel-container" id="sc-carousel">
+            <button class="nav prev">❮</button>
+            <div class="carousel">
+              <div class="item active" data-screen='OLED 0.91"'>
+                <div class="imgwrap oval"><img src="https://picsum.photos/id/1056/400/240" alt=""></div>
+                <div class="meta"><div class="title">OLED 0.91"</div></div>
+              </div>
+
+              <div class="item" data-screen='OLED 0.96"'>
+                <div class="imgwrap oval"><img src="https://picsum.photos/id/1011/400/240" alt=""></div>
+                <div class="meta"><div class="title">OLED 0.96"</div></div>
+              </div>
+
+              <div class="item" data-screen='OLED 1.3"'>
+                <div class="imgwrap oval"><img src="https://picsum.photos/id/1016/400/240" alt=""></div>
+                <div class="meta"><div class="title">OLED 1.3"</div></div>
+              </div>
+            </div>
+            <button class="nav next">❯</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT: summary and controls -->
+      <aside class="summary-panel">
+        <h3>Summary</h3>
+        <div class="summary-list">
+          <div>Firmware: <span id="sum-fw">Chatbot AI</span></div>
+          <div>Board: <span id="sum-board">ESP32-S3 M16R8</span></div>
+          <div>Screen: <span id="sum-screen">OLED 0.91"</span></div>
+          <div>File: <span id="sum-file">No file</span></div>
+        </div>
+
+        <div class="controls">
+          <button id="btn-connect">Kết nối</button>
+          <button id="btn-disconnect" disabled>Ngắt kết nối</button>
+        </div>
+
+        <div class="controls" style="margin-top:12px;">
+          <button id="btn-flash" class="primary" disabled>Nạp firmware</button>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress" id="progress">
+            <div class="bar" id="progress-bar" style="width:0%"></div>
+          </div>
+          <div id="progress-text">0%</div>
+        </div>
+
+        <div class="logs" id="logs">
+          <div class="log">Logs appear here...</div>
+        </div>
+
+      </aside>
+
+    </main>
+
+    <footer>
+      <small>Chạy trên Chrome/Edge (Chromium). Yêu cầu HTTPS hoặc localhost để dùng WebSerial API.</small>
+    </footer>
+
   </div>
 
-  <script>
-    /* ===========================
-       CONFIG FIRMWARE
-    ============================ */
-    const firmwares = [
-      {
-        label: "v1.2.0 — Stable",
-        url: "https://your-domain/esp-firmware-v1.2.0.bin",
-        version: "1.2.0",
-        board: "esp32",
-        sha256: "REPLACE_SHA256_120",
-        notes: "Sửa lỗi Wi-Fi, tăng ổn định",
-        offset: "0x1000"
-      },
-      {
-        label: "v1.1.0 — Beta",
-        url: "https://your-domain/esp-firmware-v1.1.0.bin",
-        version: "1.1.0",
-        board: "esp32",
-        sha256: "REPLACE_SHA256_110",
-        notes: "Tính năng thử nghiệm",
-        offset: "0x1000"
-      },
-      {
-        label: "v1.0.0 — Legacy",
-        url: "https://your-domain/esp-firmware-v1.0.0.bin",
-        version: "1.0.0",
-        board: "esp32",
-        sha256: "REPLACE_SHA256_100",
-        notes: "Phiên bản đầu tiên",
-        offset: "0x1000"
-      }
-    ];
-
-    /* ===========================
-       DOM
-    ============================ */
-    const selectEl = document.getElementById("versionSelect");
-    const installerArea = document.getElementById("installerArea");
-    const firmwareMeta = document.getElementById("firmwareMeta");
-    const applyBtn = document.getElementById("applyBtn");
-
-    let manifestUrl = null;
-
-    /* ===========================
-       INIT SELECT
-    ============================ */
-    firmwares.forEach((fw, i) => {
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.textContent = fw.label;
-      selectEl.appendChild(opt);
-    });
-
-    /* ===========================
-       CREATE MANIFEST
-    ============================ */
-    function createManifest(fw) {
-      const data = {
-        name: "MakersG Firmware",
-        version: fw.version,
-        description: fw.notes,
-        firmwares: [{
-          url: fw.url,
-          board: fw.board,
-          version: fw.version,
-          sha256: fw.sha256,
-          offset: fw.offset
-        }]
-      };
-
-      if (manifestUrl) URL.revokeObjectURL(manifestUrl);
-      const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
-      manifestUrl = URL.createObjectURL(blob);
-      return manifestUrl;
-    }
-
-    /* ===========================
-       APPLY SELECTION
-    ============================ */
-    function applySelection() {
-      const fw = firmwares[selectEl.value];
-      const url = createManifest(fw);
-
-      installerArea.innerHTML = "";
-      const el = document.createElement("esp-web-install-button");
-      el.setAttribute("manifest", url);
-      installerArea.appendChild(el);
-
-      firmwareMeta.innerHTML =
-        `<b>${fw.label}</b><br/><small>${fw.notes}</small><br/>SHA256: ${fw.sha256.slice(0,12)}…`;
-    }
-
-    applyBtn.onclick = applySelection;
-    applySelection();
-
-    /* ===========================
-       THEME TOGGLE
-    ============================ */
-    const toggle = document.getElementById("themeToggle");
-    const icon = document.getElementById("themeIcon");
-    const html = document.documentElement;
-
-    function setTheme(dark) {
-      html.dataset.theme = dark ? "" : "light";
-      icon.textContent = dark ? "☀️" : "🌙";
-      toggle.ariaPressed = dark;
-      localStorage.setItem("theme", dark ? "dark" : "light");
-    }
-
-    const saved = localStorage.getItem("theme");
-    const darkStart = saved === "dark" || (!saved && matchMedia("(prefers-color-scheme: dark)").matches);
-    setTheme(darkStart);
-
-    toggle.onclick = () => setTheme(html.dataset.theme === "light");
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
